@@ -1,0 +1,1405 @@
+﻿HYBRID LOG CLASSIFICATION SYSTEM USING BERT, DBSCAN, REGEX AND LLM 
+              
+  Submitted in partial fulfillment of the requirements for the award of        Bachelor of Engineering degree in Computer Science and Engineering 
+ 
+By 
+ 
+T. VENKAT SAI GANESH (Reg. No - 42111338)
+TAMIRE CHAITANYA (Reg. No - 42111339)
+
+
+  
+ 
+               
+     DEPARTMENT OF COMPUTER SCIENCE AND ENGINEERING                
+                                 SCHOOL OF COMPUTING 
+ SATHYABAMA 
+  INSTITUTE OF SCIENCE AND TECHNOLOGY 
+(DEEMED TO BE UNIVERSITY) 
+CATEGORY - 1 UNIVERSITY BY UGC 
+Accredited with Grade “A++” by NAAC I Approved by AICTE  JEPPIAAR NAGAR, RAJIV GANDHI SALAI, CHENNAI - 600119 
+APRIL - 2026
+  
+ 
+ 
+ 
+DEPARTMENT OF COMPUTER SCIENCE AND ENGINEERING 
+ 
+ 
+BONAFIDE CERTIFICATE 
+ 
+ 
+This is to certify that this Project Report is the bonafide work of T. Venkat Sai Ganesh (Reg No - 42111338), Tamire Chaitanya (Reg No - 42111339) who carried out the Project entitled “Hybrid Log Classification System Using Bert, Dbscan , Regex and LLM" under my supervision from November 2025 to April 2026. 
+ 
+ 
+ Internal Guide
+Dr. R. VIGNESH, M.E., Ph.D., 
+ 
+
+
+Head of the Department 
+   Dr. L. LAKSHMANAN, M.E., Ph.D., 
+ 
+  
+
+
+
+
+
+Submitted for Viva voce Examination held on __________________ 
+ 
+ 
+ 
+ 
+ Internal Examiner                                                                      External Examiner 
+ 
+
+
+
+
+
+
+ 
+DECLARATION 
+ 
+ 
+I, T. Venkat Sai Ganesh (Reg No - 42111338), hereby declare that the Project Report entitled “Hybrid Log Classification System Using Bert, Dbscan , Regex and LLM” done by me under the guidance of Dr. R. Vignesh, M.E., Ph.D., is submitted in partial fulfillment of the requirements for the award of Bachelor of Engineering degree in Computer Science and Engineering. 
+ 
+
+
+
+
+ 
+ 
+DATE: 
+PLACE: Chennai                                               SIGNATURE OF THE CANDIDATE 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+  
+ 
+ACKNOWLEDGEMENT 
+ 
+I am pleased to acknowledge my sincere thanks to the Board of Management of SATHYABAMA INSTITUTE OF SCIENCE AND TECHNOLOGY for their kind encouragement in doing this project and for completing it successfully. I am grateful to them. 
+ 
+I convey my thanks to Dr. L. LAKSHMANAN, M.E., Ph. D., Dean and Head, School of Computing, Department of Computer Science and Engineering for providing me necessary support and details at the right time during the progressive reviews. 
+ 
+I would like to express my sincere and deep sense of gratitude to my Project Guide Dr. R. VIGNESH, M.E., Ph.D., for her valuable guidance, suggestions, and constant encouragement that paved the way for the successful completion of my project work. 
+ 
+I wish to express my thanks to all Teaching and Non-teaching staff members of the DEPARTMENT OF COMPUTER SCIENCE AND ENGINEERING who were helpful in many ways for the completion of the project. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ABSTRACT 
+ 
+In the modern digital era, software systems generate a massive volume of log data, which plays a crucial role in monitoring, debugging, and ensuring system reliability. However, the unstructured and high-dimensional nature of these logs makes manual inspection time-consuming, error-prone, and inefficient. To address these challenges, this project proposes a Hybrid Log Classification System that integrates both rule-based techniques (Regex) and machine learning models (BERT and DeepSeek-R1 LLM) to achieve accurate and scalable log classification.The system architecture begins with the ingestion of raw log messages through a FastAPI-based endpoint, followed by preprocessing steps such as tokenization, cleaning, and pattern extraction. Simple and repetitive log patterns are effectively handled using lightweight Regex-based classification, ensuring efficiency in detecting known errors. For complex, contextual, and unseen log patterns, the system leverages BERT embeddings combined with the DeepSeek-R1 large language model, enabling semantic understanding and contextual classification beyond simple keyword matching.By combining traditional deterministic methods with deep learning-based approaches, the hybrid framework ensures both high precision and adaptability to evolving log structures. The pipeline is designed for scalability.  deep learning models in terms of accuracy, robustness, and efficiency.This project contributes a comprehensive end-to-end log analysis solution that minimizes manual intervention, reduces system downtime, and accelerates root-cause identification. Beyond classification, the system’s modular design allows future extensions into log anomaly detection, predictive maintenance, and automated incident response. In conclusion, the proposed Hybrid Log Classification System exemplifies how Generative AI, NLP, and traditional rule-based methods can be synergistically integrated to solve real-world operational challenges in software engineering. 
+
+
+ 
+ 
+ 
+ 
+
+
+	TABLE OF CONTENTS
+	
+
+	CHAPTER NO
+	TITLE
+	PAGE NO
+	
+
+	ABSTRACT
+	v
+	
+
+	LIST OF ABBREVIATIONS
+	viii
+	
+
+	LIST OF FIGURES
+	x
+	
+
+	LIST OF TABLES
+	xi
+	1
+	INTRODUCTION
+	1
+	
+
+	1.1 Background and Context
+	1
+	
+
+	1.2 Research Problem and Significance
+	1
+	
+
+	1.3 Research Objectives
+	2
+	
+
+	1.4 Methodology Overview
+	3
+	2
+	LITERATURE SURVEY
+	4
+	
+
+	2.1 Inferences from Literature Survey
+	4
+	
+
+	2.2 Open problems in Existing System
+	7
+	3
+	AIM AND SCOPE OF THE PROPOSED SYSTEM
+	9
+	
+
+	3.1 Aim of the proposed system
+	9
+	
+
+	3.2 Scope of the proposed system
+	9
+	4
+	REQUIREMENT ANALYSIS
+	11
+	
+
+	4.1 Functional Requirements
+	11
+	
+
+	4.2 Non - Functional Requirements
+	11
+	
+
+	4.3 Hardware Requirements
+	12
+	
+
+	4.4 Software Requirements
+	12
+	5
+	METHODOLOGY AND DESIGN OF THE PROPOSED SYSTEM
+	13
+	
+
+	5.1 Research Approach
+	13
+	
+
+
+
+
+
+	5.2 Dataset Description
+	13
+	
+
+	5.3 Research Design
+	14
+	
+
+	5.4 Data Preprocessing
+	15
+	
+
+	5.5 Overall System Workflow
+	16
+	
+
+	5.6 Feature Extraction using Embeddings
+	18
+	
+
+	5.7 Clustering of Log Messages
+	19
+	
+
+	5.8 Log Classification
+	20
+	
+
+	5.9 API Implementation using fastapi
+	21
+	
+
+	5.10 System Integration and Data Flow
+	22
+	
+
+	5.11 Performance Evaluation
+	22
+	
+
+	5.12 Advantages of the Proposed System
+	23
+	6
+	RESULTS AND DISCUSSION
+	24
+	
+
+	6.1 Performance analysis of models
+	24
+	
+
+	6.2 Dataset output analysis
+	24
+	
+
+	6.3 Initial log processing results
+	25
+	
+
+	6.4 Detailed analysis of Regex-based classification
+	25
+	
+
+	6.5 LLM-based classification results
+	27
+	
+
+	6.6 Detailed analysis of bert-based classification
+	28
+	
+
+	6.7 Detailed analysis of llm-based classification
+	29
+	
+
+	6.8 API-based result output (fastapi)
+	30
+	
+
+	6.9 Classification performance metrics
+	30
+	
+
+	6.10 Comparative analysis
+	31
+	7
+	CONCLUSION
+	32
+	
+
+	REFERENCES
+	33
+	
+
+	ANNEXURE
+	34
+	
+
+
+
+LIST OF ABBREVIATIONS 
+
+
+ABBREVIATION
+	EXPANSION
+	AI
+	Artificial Intelligence
+	ML
+	Machine Learning
+	DL
+	Deep Learning
+	NLP
+	Natural Language Processing
+	LLM
+	Large Language Model
+	API
+	Application Programming Interface
+	DBSCAN
+	Density-Based Spatial Clustering of Applications with Noise
+	BERT
+	Bidirectional Encoder Representations from Transformers
+	HTTP
+	HyperText Transfer Protocol
+	JSON
+	JavaScript Object Notation
+	CPU
+	Central Processing Unit
+	GPU
+	Graphics Processing Unit
+	RAM
+	Random Access Memory
+	IDE
+	Integrated Development Environment
+	CSV
+	Comma-Separated Values
+	REST
+	Representational State Transfer
+	FastAPI
+	High-performance API framework
+	OpenAI
+	Artificial Intelligence Research Organization
+	NumPy
+	Numerical Python Library
+	Pandas
+	Data Analysis Library
+	Matplotlib
+	Data Visualization Library        
+	Scikit-learn
+	Machine Learning Library
+	Sentence Transformers
+	Text Embedding Framework
+	Embedding
+	Vector Representation of Text
+	Clustering
+	Grouping Similar Data
+	Classification
+	Assigning Categories to Data
+	Preprocessing
+	Data Cleaning and Preparation
+	Anomaly Detection
+	Identifying Unusual Patterns
+	Log
+	Record of System Event
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+LIST OF FIGURES 
+ 
+ 
+                   
+FIGURE NO.         FIGURE NAME         PAGE NO. 
+          
+   1.                The Challenge of Manual Log Analysis        2 
+ 
+5.1                     Unique log sources and target labels        14 
+5.2                             Log preprocessing using regex patterns        15 
+5.3                             Log Message Embeddings Output        18 
+5.4                    Clustered log dataset with labels        19 
+5.5                             Fast API Interface for Log Classification        22 
+6.1                        Sample dataset with classified labels        24 
+6.2                   Initial log classification results        25 
+6.3              Regex-based classification output        26 
+6.4             Llm-based classification output        27 
+6.5                            BERT classification output        28 
+6.6                    FastAPI interface        30 
+6.7                    Classification report                                                       30 
+ 
+LIST OF TABLES 
+ 
+ 
+TABLE NO 
+	TABLE NAME 
+	PAGE NO 
+	2.1 
+	Research gaps in existing system 
+	7 
+	2.2 
+	Research gaps in existing system 
+	8 
+	
+
+ 
+CHAPTER 1 
+INTRODUCTION 
+ 
+1.1 BACKGROUND AND CONTEXT 
+In modern software systems, large volumes of log data are continuously generated from multiple sources such as servers, applications, APIs, and monitoring tools. These logs play a crucial role in understanding system behavior, diagnosing failures, and ensuring system reliability. However, due to the increasing scale and complexity of distributed systems, manual log analysis has become inefficient, time-consuming, and error-prone.
+Traditional log analysis techniques rely heavily on rule-based systems and manual inspection, which are not scalable in real-world environments. Logs are often unstructured and contain diverse patterns, making it difficult to extract meaningful insights using conventional methods.
+With the advancement of Artificial Intelligence (AI) and Natural Language Processing (NLP), log messages can now be treated as textual data. Deep learning models such as BERT have shown remarkable capability in understanding contextual relationships within text. This enables automated systems to analyze logs more effectively by capturing semantic meaning rather than relying only on predefined patterns.Therefore, intelligent log classification systems are becoming essential for modern IT infrastructure to improve monitoring, anomaly detection, and system maintenance.
+ 
+1.2 RESEARCH PROBLEM AND SIGNIFICANCE 
+Despite advancements in log analysis, several challenges still exist:
+* Log data is highly unstructured and dynamic 
+* Traditional methods depend on manual rules and parsing 
+* Difficulty in detecting unknown or complex patterns 
+* Large-scale logs require high computational efficiency 
+* Existing systems either focus only on machine learning or deep learning, but fail to combine multiple techniques effectively.
+  
+
+Fig: 1.1. The Challenge of Manual Log Analysis
+To overcome these limitations, there is a need for a hybrid system that integrates:
+* Semantic understanding (BERT embeddings) 
+* Pattern recognition (Regex rules) 
+* Unsupervised learning (Clustering) 
+Such a system can significantly improve classification accuracy, reduce manual effort, and enhance system reliability.
+
+
+1.3 RESEARCH OBJECTIVES: 
+The main objectives of this project are:
+* To develop an automated system for log classification 
+* To apply BERT-based embeddings for semantic understanding 
+* To perform clustering for grouping similar log messages 
+* To integrate regex-based rules for pattern recognition 
+* To classify logs into predefined categories 
+* To evaluate system performance using metrics such as accuracy, precision, recall, and F1-score.
+
+
+
+
+1.4 METHODOLOGY OVERVIEW 
+The proposed system follows a hybrid approach combining deep learning, machine learning, and rule-based techniques.Initially, log messages are preprocessed and converted into vector representations using BERT embeddings. These embeddings capture semantic relationships between log messages.Next, clustering techniques are applied to group similar logs. Regex-based rules are then used to refine classification by identifying known patterns.
+Finally, the system assigns labels such as:
+* HTTP Status 
+* Critical Error 
+* Security Alert 
+* System Notification 
+* Resource Usage 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CHAPTER 2  
+LITERATURE SURVEY 
+ 
+ 
+2.1 INFERENCES FROM LITERATURE SURVEY 
+Over the past decade, the rapid growth of distributed systems, cloud computing, and large-scale applications has led to an exponential increase in system-generated log data. Log files contain valuable information about system behavior, errors, user activities, and performance metrics. Efficient analysis of such logs is essential for system monitoring, anomaly detection, and fault diagnosis. Researchers have proposed various machine learning and deep learning techniques to address these challenges. The following section presents a detailed analysis of existing works in log anomaly detection.
+1. He, P. et al. conducted a comprehensive evaluation study on log anomaly detection techniques by comparing both traditional machine learning methods and deep learning approaches. Their research focused on understanding how different models perform under varying log structures and datasets. Traditional methods such as Support Vector Machines and clustering algorithms were found to be effective for structured logs but struggled with unstructured and high-dimensional data. On the other hand, deep learning models demonstrated improved performance by capturing hidden patterns and dependencies within logs. However, the study concluded that no single model can handle all types of log data effectively, highlighting the need for adaptive and hybrid approaches.
+2. Du, M. et al. proposed DeepLog, a pioneering deep learning-based framework that utilizes Long Short-Term Memory (LSTM) networks to model log sequences. In this approach, system logs are treated as sequences similar to natural language sentences. The LSTM model learns normal execution patterns during training and detects anomalies by identifying deviations from these learned patterns. DeepLog is particularly effective in capturing temporal dependencies between log events, making it suitable for sequential anomaly detection. Despite its high accuracy, the model requires a large amount of labeled training data and significant computational resources, which can limit its scalability in real-time applications.
+3. Zhang, X. et al. introduced LogRobust, an advanced anomaly detection model based on attention-enhanced Bi-LSTM networks. The key advantage of this model is its ability to handle unseen log messages by learning semantic relationships between log tokens. The attention mechanism allows the model to focus on important parts of the log sequence, improving detection accuracy. This makes LogRobust more robust compared to earlier models. However, the system relies heavily on log parsing techniques to convert raw logs into structured templates. Any change in log format can negatively impact the parsing process, thereby reducing the effectiveness of the model.
+4. Le, V. and Zhang, H. proposed a novel approach for log anomaly detection that eliminates the dependency on log parsing. Instead of converting logs into structured templates, their model directly processes raw log messages using deep learning techniques. This approach improves flexibility and makes the system adaptable to dynamic log formats. It reduces preprocessing overhead and simplifies the pipeline. However, processing raw logs increases computational complexity and requires more memory and processing power, making it less efficient for large-scale systems.
+5. Guo, H. et al. developed LogBERT, a transformer-based model inspired by Bidirectional Encoder Representations from Transformers (BERT). This model leverages self-attention mechanisms to understand contextual relationships between log messages. LogBERT is capable of capturing both local and global dependencies within log sequences, leading to highly accurate anomaly detection. The use of masked language modeling further enhances its ability to detect abnormal patterns. However, transformer-based models are computationally expensive and require GPU acceleration, which increases deployment cost and limits real-time applicability.
+6. Brown, T. B. et al. introduced large-scale language models capable of performing tasks using few-shot and zero-shot learning techniques. These models can generalize well even with minimal labeled data, making them useful for handling rare or unseen log patterns. Their adaptability makes them suitable for dynamic environments where log data continuously evolves. However, these models are not specifically designed for log analysis tasks, and their large size results in high computational overhead, which can be impractical for production systems.
+7. Ester, M. et al. proposed the DBSCAN (Density-Based Spatial Clustering of Applications with Noise) algorithm, which is widely used for clustering and anomaly detection. In the context of log analysis, DBSCAN groups similar log messages into clusters and identifies anomalies as noise points that do not belong to any cluster. The algorithm is effective in detecting irregular patterns without requiring labeled data. However, it is highly sensitive to parameter selection such as epsilon and minimum points, which can significantly affect clustering performance.
+8. Devlin, J. et al. introduced BERT, a deep bidirectional transformer model that has revolutionized natural language processing tasks. BERT provides contextual embeddings by analyzing words based on their surrounding context in both directions. In log analysis, BERT can be used to generate meaningful representations of log messages, improving anomaly detection accuracy. Despite its effectiveness, BERT requires extensive computational resources and long training times, making it challenging for continuous monitoring systems.
+9. Landauer, T. K. and Dumais, S. T. proposed Latent Semantic Analysis (LSA), a classical technique for representing textual data in a lower-dimensional vector space. LSA captures relationships between words and documents using matrix decomposition methods. In log analysis, it helps in identifying patterns and similarities between log messages. However, LSA lacks the ability to capture deep contextual meaning and has been largely replaced by more advanced models such as word embeddings and transformers.
+10. Bertero, C. et al. conducted a survey on natural language processing techniques for log analysis. The study explored methods such as TF-IDF, LSA, and recurrent neural networks for extracting information from log data. It provided a strong foundation for early log analysis systems and highlighted key challenges in preprocessing and feature extraction. However, the survey does not include modern deep learning models such as transformers, limiting its relevance for current research.
+ 
+2.2 OPEN PROBLEMS IN EXISTING SYSTEMS 
+ 
+Table 2.1 Research gaps in existing systems 
+S.NO 
+	YEAR OF 
+PUBLISHING 
+	TITLE 
+	AUTHOR 
+	REMARKS 
+	1 
+	2021
+	
+
+
+
+	
+
+DeepLog: Anomaly Detection and Diagnosis from System Logs
+	
+
+	Du, M. et al.
+	* Requires large training data.
+* High computational complexity. 
+* Not suitable for real-time systems.
+	2 
+	2019
+	LogRobust: Robust Log-Based Anomaly Detection. 
+	Zhang, X. et al.
+	•         Depends on log parsing. • Fails when log format changes. 
+•    Limited adaptability to dynamic systems.
+	3 
+	2021 
+	LogBERT: Log Anomaly Detection via BERT
+	Guo, H. et al.
+	* Requires GPU resources. 
+*  High computational cost. 
+* Difficult for real-time deployment.
+	4
+	2020
+	 Language Models are Few-Shot Learners
+	Brown, T. B. et al.
+	•  Not specifically    
+    designed for log     
+     analysis. 
+•   Large model size 
+   increases cost.
+	Table 2.2 Research gaps in existing systems 
+S.NO 
+	YEAR OF 
+PUBLISHING 
+	TITLE 
+	AUTHOR 
+	REMARKS 
+	5
+	1996
+	DBSCAN Clustering Algorithm
+	Cheng. et al. 
+	* Sensitive to parameter selection. 
+*  May produce inconsistent clustering results.
+	6
+	2018 
+	BERT: Pre-training of Deep Bidirectional Transformers. 
+	Devlin, J. et al.
+	* Requires large computational resources. 
+ High training time.
+	7
+	1997
+	Latent Semantic Analysis
+	Landauer, T. K. et al.
+	•         Does not perform 
+explicit outdated compared to modern techniques.
+
+
+	8
+	2017
+	
+
+
+
+	
+
+Survey of NLP Techniques for Log Analysis
+	
+
+	Bertero, C. et al.
+	* Does not include transformer models. 
+* Limited relevance to modern systems.
+	
+
+________________
+
+
+CHAPTER 3
+ AIM AND SCOPE OF THE PRESENT INVESTIGATION 
+ 
+ 
+3.1. AIM OF THE PROPOSED SYSTEM: 
+The aim of the present investigation is to develop an intelligent and efficient log anomaly detection system using advanced machine learning and deep learning techniques. The proposed system focuses on analyzing large-scale log data generated from different sources such as ModernCRM, AnalyticsEngine, BillingSystem, and other enterprise applications.
+The system aims to automatically classify log messages into different categories such as HTTP Status, Critical Error, Security Alert, System Notification, and User Action. By leveraging embedding techniques and clustering algorithms, the system is designed to identify hidden patterns and detect anomalies in real-time.
+Furthermore, the proposed system integrates modern Natural Language Processing (NLP) techniques, including embedding generation and contextual analysis, to improve classification accuracy and robustness. The system also aims to reduce manual effort in log monitoring, enhance system reliability, and provide faster detection of critical issues in large-scale applications.
+ 
+3.2. SCOPE OF THE PROPOSED SYSTEM: 
+The defined scope ensures that the study remains focused, manageable, and aligned with its objectives, clearly outlining what is included while preventing unnecessary expansion beyond the intended research boundaries. 
+ 
+Subjects / Topics Covered 
+• Log data collection and preprocessing from multiple sources
+• Text cleaning and normalization of log messages
+• Feature extraction using embedding models (BERT-based embeddings)
+• Log classification into predefined categories
+• Clustering of log messages using unsupervised learning techniques
+• Anomaly detection based on pattern deviation
+• Performance evaluation using accuracy, precision, recall, and F1-score
+ 
+Research Methodology 
+The study follows a quantitative and experimental approach, involving: 
+* Data preprocessing and cleaning of raw log messages
+* Conversion of log messages into numerical representations using embeddings
+* Application of machine learning and deep learning models for classification
+* Clustering of similar log patterns using algorithms such as DBSCAN or K-Means
+* Evaluation of model performance using standard metrics
+* Visualization and interpretation of results
+Time Frame  
+The project is carried out within the allocated academic duration, covering all phases such as data collection, preprocessing, model development, training, testing, and evaluation. The implementation is performed using tools such as Python, Jupyter Notebook, and relevant machine learning libraries. 
+Boundaries and Exclusions 
+* Manual labeling of logs is minimized; automated labeling and clustering techniques are used instead
+* External system dependencies and live server integrations are not considered
+* The system focuses on classification and anomaly detection, not on automated system recovery
+* Real-time streaming integration is not fully implemented
+* The system is limited to log data analysis and does not include full-scale production deployment. 
+
+
+ 
+ 
+ 
+ 
+ 
+  
+CHAPTER 4 
+REQUIREMENT ANALYSIS 
+ 
+This section outlines the functional and non-functional operations the model must perform. It also lists out the hardware and software components needed to implement the model workflow. 
+4.1 FUNCTIONAL REQUIREMENTS: 
+The system should be capable of performing the following functions:
+• Log Data Input: The system must accept log data from multiple sources such as ModernCRM, AnalyticsEngine, BillingSystem, and other applications.
+• Data Preprocessing: The system should clean and preprocess raw log messages by removing unnecessary characters, applying regex patterns, and normalizing text data.
+• Feature Extraction: The system must convert log messages into numerical representations using embedding techniques such as BERT.
+• Log Classification: The system should classify log messages into predefined categories such as HTTP Status, Critical Error, Security Alert, System Notification, and User Action.
+• Clustering: The system should group similar log messages using clustering algorithms to identify patterns and relationships.
+• Anomaly Detection: The system must detect unusual or abnormal log patterns that deviate from normal behavior.
+• Result Visualization: The system should display classification results and performance metrics in an understandable format.
+• Performance Evaluation: The system must evaluate performance using metrics such as accuracy, precision, recall, and F1-score.
+ 
+4.2 NON-FUNCTIONAL REQUIREMENTS 
+• Accuracy: The system should achieve high classification accuracy to ensure reliable anomaly detection.
+• Efficiency: The system should process log data quickly and handle large volumes of data efficiently.
+• Scalability: The system should be capable of handling increasing amounts of log data without performance degradation.
+• Reliability: The system should produce consistent and stable results across different datasets.
+• Usability: The system should be easy to use and understandable for users with basic technical knowledge.
+• Maintainability: The system should be easy to update and maintain for future enhancements.
+ 
+4.3 HARDWARE REQUIREMENTS: 
+The hardware configuration required to implement the proposed system is as follows:
+• Processor: Intel Core i5 or higher
+• RAM: Minimum 8 GB (Recommended: 16 GB or above)
+• Storage: Minimum 256 GB SSD
+• GPU: Optional (Recommended for faster processing and model training)
+• Internet: Required for downloading libraries and datasets
+ 
+4.4 SOFTWARE REQUIREMENTS:  
+The software environment required for the development and execution of the The software environment required for the development and execution of the proposed system includes:
+• Operating System: Windows / Linux
+• Programming Language: Python 3.x
+• Development Environment: Jupyter Notebook / VS Code
+• Libraries and Frameworks:
+* NumPy
+* Pandas
+* Scikit-learn
+* Matplotlib
+* Seaborn
+* Transformers (Hugging Face)
+• Machine Learning Models:
+* BERT (for embeddings)
+* DBSCAN / K-Means (for clustering)
+* Random Forest / SVM (for classification)
+ 
+CHAPTER 5
+ METHODOLOGY AND DESIGN OF THE PROPOSED SYSTEM 
+ 
+5.1 RESEARCH APPROACH: 
+This study adopts a data-driven and experimental research approach to develop an intelligent log anomaly detection system. 
+The approach focuses on converting unstructured log data into structured representations using Natural Language Processing (NLP) techniques. Embedding models are used to transform log messages into numerical vectors, which are further used for clustering and classification. 
+ 
+5.2 DATASET DESCRIPTION: 
+The dataset used in the proposed system consists of log messages collected from multiple enterprise-level applications and systems. These logs represent real-world scenarios and include various types of system events such as errors, warnings, user activities, and system notifications.
+The log data is collected from sources such as ModernCRM, AnalyticsEngine, ModernHR, BillingSystem, ThirdPartyAPI, and LegacyCRM. Each source generates logs with different formats and structures, making the dataset diverse and suitable for testing the robustness of the system.
+The dataset is labeled into multiple categories, including HTTP Status, Critical Error, Security Alert, Error, System Notification, Resource Usage, User Action, Workflow Error, and Deprecation Warning. These categories help in organizing log messages and identifying system behavior effectively. The above figure illustrates the different log sources and corresponding labels present in the dataset. The presence of multiple categories ensures that the system can handle a wide range of log messages and improve classification performance.
+To ensure proper evaluation, the dataset is divided into training and testing sets. Data balancing techniques may also be applied to avoid bias towards specific categories.
+
+
+  
+
+Fig: 5.1 Unique log sources and target labels 
+
+
+The dataset includes different target labels such as HTTP Status, Critical Error, Security Alert, Error, System Notification, Resource Usage, User Action, Workflow Error, and Deprecation Warning.
+
+
+5.3 DATA PREPROCESSING: 
+Before applying machine learning models, the raw log data undergoes preprocessing to remove noise and standardize the format. Log messages often contain unnecessary characters, timestamps, and system-specific patterns that need to be cleaned.
+Regex-based pattern matching is used to categorize certain types of logs such as user actions and system notifications. This improves classification efficiency and reduces ambiguity in log messages.
+. 
+  
+
+Fig: 5.2 Log preprocessing using regex patterns 
+ 
+The system architecture consists of: 
+* Image preprocessing and normalization 
+* Pseudo-Mask Generation 
+* Segmentation of cervical cells 
+* Deep feature extraction using convolutional neural networks 
+* Feature compression using an autoencoder 
+* Final classification using ensemble machine learning models 
+This multi-stage design allows the system to effectively capture important cellular features and improve classification accuracy. 
+ 
+
+
+5.4 DATA PREPROCESSING: 
+The architecture of the proposed system is designed to handle logs from multiple sources and process them through a centralized pipeline. The system supports scalability and can efficiently manage logs generated from different enterprise applications.
+
+
+  
+
+
+
+Fig: 5.3 System Architecture Diagram 
+ 
+The above figure illustrates the system architecture where logs are collected from multiple clients such as CRM, HR, and Billing systems. These logs are aggregated into a centralized repository, which is then processed by the log classification system.
+The classified logs are forwarded to a monitoring system for further analysis and visualization. This architecture ensures efficient handling of large-scale log data and supports integration with multiple applications.
+
+
+5.5 OVERALL SYSTEM WORKFLOW:
+The workflow of the proposed system follows a multi-stage pipeline that processes log data step by step. Each stage is designed to improve the quality of The workflow begins with log ingestion, where logs are collected from different sources. These logs undergo preprocessing, which includes normalization, noise removal, and tokenization. Next, unsupervised pattern discovery is performed using clustering algorithms such as DBSCAN. This step helps in identifying repetitive patterns and filtering high-frequency logs. The processed logs are then passed to a BERT-based semantic classifier, which assigns categories based on contextual understanding. A confidence check mechanism is used to determine the reliability of classification results.
+
+
+
+
+  
+
+Fig: 5.3 Log Processing Workflow  
+
+
+For logs with low confidence, an LLM-based fallback mechanism is used. This ensures that ambiguous or complex logs are handled effectively.
+Finally, the system outputs categorized logs such as Security Alert, Workflow Error, HTTP Status, and Unclassified logs.
+This multi-stage workflow improves accuracy and ensures robustness in real-world scenarios.
+
+
+
+
+
+
+
+
+
+
+
+
+5.6 FEATURE EXTRACTION USING EMBEDDINGS:
+Feature extraction is a critical step in transforming textual log data into numerical form that can be processed by machine learning models. In the proposed system, embedding techniques are used to convert log messages into vector representations.
+Embedding models such as Sentence Transformers (all-MiniLM-L6-v2) or BERT are used to generate dense vector representations of log messages. These embeddings capture semantic meaning and contextual relationships between words in a log message.
+Unlike traditional methods such as TF-IDF, embeddings provide deeper understanding by considering the context of words. This allows the system to differentiate between similar log messages based on meaning rather than keywords.
+  
+
+Fig: 5.3 Log Message Embeddings Output
+ 
+The above figure shows sample embedding vectors generated for log messages. Each log message is represented as a high-dimensional vector, which can be used for clustering and classification.
+These embeddings enable the system to:
+The use of embedding techniques significantly improves the performance of the system compared to traditional feature extraction methods.
+• Identify similarity between log messages
+• Capture contextual meaning
+• Improve classification accuracy
+• Enhance anomaly detection
+The use of embedding techniques significantly improves the performance of the system compared to traditional feature extraction methods.
+
+
+5.7 CLUSTERING OF LOG MESSAGES:
+Clustering is an unsupervised learning technique used to group similar log messages based on their feature representations. In the proposed system, clustering plays a crucial role in identifying patterns and detecting anomalies in log data.
+After generating embeddings for log messages, clustering algorithms such as DBSCAN (Density-Based Spatial Clustering of Applications with Noise) are applied. DBSCAN is particularly suitable for log analysis because it can identify clusters of arbitrary shapes and detect noise points (outliers) without requiring a predefined number of clusters.
+The clustering process involves grouping log messages based on their similarity in the embedding space. Logs that belong to the same cluster share similar patterns, while logs that do not belong to any cluster are considered anomalies.
+
+
+  
+
+Fig: 5.4. Clustered log dataset with labels
+
+
+The above figure shows the dataset after clustering, where each log message is assigned a cluster label. This helps in organizing log data into meaningful groups and identifying abnormal patterns.
+
+
+Advantages of clustering in the proposed system:
+• Identifies repetitive log patterns
+• Detects anomalies as outliers
+• Reduces data complexity
+• Improves classification efficiency   
+However, clustering performance depends on parameter selection such as epsilon and minimum samples. Proper tuning is required to achieve optimal results.
+
+
+5.8 LOG CLASSIFICATION:
+Log classification is the process of assigning predefined labels to log messages based on their content. In the proposed system, a hybrid classification approach is used, combining machine learning and deep learning techniques.
+The classification process involves two main approaches:
+1. Machine Learning-Based Classification
+Traditional machine learning algorithms such as Random Forest, Support Vector Machine (SVM), and Logistic Regression are used to classify log messages based on embedding features. These models are trained using labeled data and learn patterns associated with each category.
+2. Deep Learning-Based Classification
+A BERT-based classifier is used to improve semantic understanding of log messages. BERT analyzes the context of words and captures relationships between different parts of the log message, resulting in more accurate classification.
+The hybrid approach combines the strengths of both methods, ensuring better performance and robustness.
+Classification categories include:
+• HTTP Status
+• Critical Error
+• Security Alert
+• Error
+• System Notification
+• Resource Usage
+• User Action
+• Workflow Error
+• Deprecation Warning
+The classification model learns from training data and predicts labels for new log messages, reducing manual effort and improving system efficiency.
+
+
+5.9 API IMPLEMENTATION USING FASTAPI:
+To make the system accessible and usable in real-world applications, the proposed system is deployed using FastAPI. FastAPI is a modern web framework for building high-performance APIs using Python.
+The API provides an interface for users to send log messages and receive classification results in real-time. The system exposes an endpoint (/classify/) that accepts log input and returns the predicted category.
+The above figure shows the FastAPI interface where users can interact with the system. The POST request allows users to input log messages, and the system processes the input and returns the classification result.
+
+
+Key features of the API implementation:
+• High performance and low latency
+• Easy integration with other applications
+• Automatic documentation using Swagger UI
+• Supports real-time log classification
+The API layer ensures that the system can be deployed in production environments and integrated with monitoring tools and enterprise applications.
+  
+
+Fig: 5.5. Fast API Interface for Log Classification
+
+
+5.10 SYSTEM INTEGRATION AND DATA FLOW:
+The proposed system integrates multiple components to ensure seamless processing of log data. The data flow begins with log collection from various sources and ends with classification and monitoring.
+The integration process includes:
+• Collecting logs from multiple systems
+• Aggregating logs into a centralized repository
+• Preprocessing and feature extraction
+• Applying clustering and classification
+• Providing results through API
+• Forwarding results to monitoring systems
+
+
+The system ensures smooth communication between modules and maintains data consistency throughout the pipeline.
+This integrated approach improves system efficiency and enables real-time log analysis in large-scale environments.
+
+
+5.11 PERFORMANCE EVALUATION:
+The performance of the proposed log classification system is evaluated using standard machine learning metrics such as accuracy, precision, recall, and F1-score. These metrics provide a comprehensive understanding of the system’s effectiveness in classifying log messages correctly.
+Accuracy represents the overall correctness of the model, indicating the percentage of correctly classified log messages. Precision measures how many of the predicted positive instances are actually correct, while recall indicates how many actual positive instances are correctly identified. The F1-score is the harmonic mean of precision and recall, providing a balanced evaluation of the model. The results indicate that the system achieves high accuracy across multiple categories such as HTTP Status, Security Alert, and System Notification.
+The high precision and recall values demonstrate that the model is capable of accurately identifying log categories with minimal false positives and false negatives. The F1-score further confirms the robustness of the system.
+Additionally, the model shows consistent performance across different classes, indicating that it is not biased toward any specific category. This ensures reliability in real-world applications.
+
+
+5.12 ADVANTAGES OF THE PROPOSED SYSTEM:
+The proposed system offers several advantages over traditional log analysis methods:
+• Improved accuracy through hybrid approach combining ML, DL, and NLP techniques
+• Ability to handle unstructured and dynamic log data effectively
+• Reduced dependency on manual rule-based systems
+• Scalable architecture suitable for large-scale applications
+• Efficient detection of anomalies and unusual patterns
+• Real-time classification using API-based deployment
+• Integration of multiple techniques for better performance
+• Enhanced semantic understanding using embedding mode
+
+
+CHAPTER 6
+RESULTS & DISCUSSION
+ 
+6.1 PERFORMANCE ANALYSIS OF MODELS: 
+This chapter presents a detailed analysis of the results obtained from the implementation of the proposed hybrid log classification system. The system integrates multiple techniques such as regex-based preprocessing, embedding-based feature extraction, clustering, machine learning classification, and LLM-based fallback mechanisms.
+The objective of this chapter is to evaluate the performance of the system in real-world scenarios and analyze its effectiveness in handling different types of log data. The results are discussed in detail to provide a clear understanding of how each component contributes to the overall performance of the system.
+
+
+6.2 DATASET OUTPUT ANALYSIS: 
+The dataset used in this project consists of diverse log messages collected from multiple systems such as CRM, Billing, HR, Analytics, and Legacy systems. Each log message represents a specific system event and is associated with a predefined category.  
+Fig: 6.1. Sample dataset with classified labels
+
+
+
+
+6.3 INITIAL LOG PROCESSING RESULTS: 
+Before applying advanced models, the log messages are processed using basic classification techniques. This includes rule-based and pattern-based approaches.
+The above figure shows the output of the initial log processing stage. The system classifies logs into categories such as HTTP Status, Critical Error, Security Alert, and Unclassified logs.
+This step provides a baseline for evaluating the performance of advanced models. It demonstrates how the system can identify basic patterns in log messages using simple techniques.
+However, rule-based methods alone are not sufficient for handling complex log messages. This highlights the need for advanced techniques such as embeddings and deep learning.
+  
+
+Fig: 6.2. Initial log classification results
+
+
+6.4 DETAILED ANALYSIS OF BERT-BASED CLASSIFICATION:
+Regex-based classification is one of the initial techniques used in the proposed system for identifying specific patterns in log messages. Regular expressions are used to match predefined patterns such as user actions, system notifications, and repetitive log formats. 
+
+
+  
+
+Fig: 6.3. Regex-based classification output
+
+
+The above figure shows the output generated by the regex-based processor. The system successfully classifies multiple log messages into categories such as "User Action" and "System Notification".
+This approach is highly effective for logs that follow structured patterns. For example, logs related to user login/logout, system updates, and file operations can be easily identified using regex patterns.
+Advantages of regex-based classification:
+• Fast and efficient for structured log patterns
+• Easy to implement and understand
+• Reduces computational overhead
+• Improves preprocessing efficiency
+However, regex-based methods have limitations. They are not capable of handling complex or unstructured log messages that do not follow predefined patterns. This limitation necessitates the use of advanced techniques such as embeddings and machine learning models.
+
+
+
+
+6.5 LLM-BASED CLASSIFICATION RESULTS:
+To handle complex and ambiguous log messages, the proposed system incorporates a Large Language Model (LLM)-based classification mechanism. This approach is particularly useful for logs that cannot be classified using rule-based or traditional machine learning methods.
+  
+
+Fig: 6.4. Llm-based classification output
+The above figure shows the output generated by the LLM-based processor. The system successfully classifies log messages into categories such as Workflow Error, Deprecation Warning, and Unclassified logs.
+The LLM-based approach provides several advantages:
+• Ability to understand contextual meaning of log messages
+• Handles unstructured and complex logs effectively
+• Requires minimal manual feature engineering
+• Improves classification accuracy for ambiguous cases
+The LLM analyzes the log message and predicts the most appropriate category based on semantic understanding. This makes it highly effective in dynamic environments where log formats continuously change.
+However, LLM-based methods have certain limitations:
+• Higher computational cost compared to traditional methods
+• Increased latency due to API-based processing
+• Requires proper prompt design for accurate results
+Despite these limitations, the integration of LLM significantly enhances the overall performance of the system. It acts as a fallback mechanism for low-confidence cases and ensures better classification accuracy.
+
+
+
+
+
+
+6.6 DETAILED ANALYSIS OF BERT-BASED CLASSIFICATION:
+The BERT-based classification model plays a crucial role in improving the accuracy of the system. Unlike regex, BERT understands the contextual meaning of log messages.
+  
+
+Fig: 6.5. BERT classification output
+From the results, it can be observed that BERT successfully classifies complex log messages such as:
+• Server errors and failures
+• Security alerts
+• Critical system issues
+For example, a log message indicating a server crash is correctly classified as a "Critical Error", even though it does not follow a fixed pattern.
+This demonstrates the ability of BERT to capture semantic relationships between words and understand the meaning of log messages.
+However, BERT requires more computational resources compared to regex-based methods. Despite this, the improvement in accuracy justifies its use in the system.
+
+
+
+
+
+
+
+
+6.7 DETAILED ANALYSIS OF LLM-BASED CLASSIFICATION:
+The Large Language Model (LLM)-based classification mechanism is incorporated into the system as a fallback approach to handle complex, ambiguous, and low-confidence log messages. Unlike traditional machine learning models, LLMs are capable of understanding deep contextual relationships and semantic meaning within textual data.
+The above figure shows the output generated by the LLM-based processor. The system successfully classifies log messages into categories such as Workflow Error, Deprecation Warning, and Unclassified logs.
+The LLM-based approach provides several advantages:
+• Ability to understand contextual meaning of log messages
+• Handles unstructured and complex logs effectively
+• Requires minimal manual feature engineering
+• Improves classification accuracy for ambiguous cases
+The LLM analyzes the log message and predicts the most appropriate category based on semantic understanding. This makes it highly effective in dynamic environments where log formats continuously change.
+However, LLM-based methods have certain limitations:
+• Higher computational cost compared to traditional methods
+• Increased latency due to API-based processing
+• Requires proper prompt design for accurate results
+Despite these limitations, the integration of LLM significantly enhances the overall performance of the system. It acts as a fallback mechanism for low-confidence cases and ensures better classification accuracy.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+6.8 API-BASED RESULT OUTPUT (FASTAPI):
+The proposed system is deployed using FastAPI to provide real-time log classification through an API interface.
+  
+
+Fig: 6.6. FastAPI interface
+
+
+6.9 CLASSIFICATION PERFORMANCE METRICS:
+The results show that the system achieves high accuracy (approximately 99%) across different categories. The precision and recall values are also high, indicating that the model performs well in identifying log categories correctly.
+  
+
+Fig: 6.7 Classification report
+
+
+
+
+6.10 COMPARATIVE ANALYSIS:
+The proposed system combines multiple techniques including regex, machine learning, deep learning, and LLM-based methods.
+• Regex is fast but limited to structured logs
+• BERT provides semantic understanding
+• LLM handles complex and ambiguous logs
+• API enables real-time classification
+The hybrid approach ensures better performance compared to individual methods
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+CHAPTER 7 
+CONCLUSION 
+ 
+In conclusion, this project presented a hybrid log classification system that integrates multiple techniques including regex-based preprocessing, embedding generation using sentence transformers, clustering, deep learning-based classification, and Large Language Model (LLM)-based fallback mechanisms. The primary objective of this system is to efficiently analyze and classify large-scale and heterogeneous log data generated from various enterprise systems such as CRM, Billing, HR, Analytics, and Legacy systems. The hybrid architecture plays a crucial role in improving both accuracy and efficiency by combining the strengths of different approaches.
+The use of regex-based techniques provides fast and efficient classification for structured log messages, reducing computational overhead in the initial stages. The embedding model (all-MiniLM-L6-v2) captures semantic relationships within log messages, enabling the system to understand contextual meaning rather than relying solely on keywords. This significantly improves the classification of complex and unstructured logs. Additionally, clustering techniques such as DBSCAN help in grouping similar log patterns, enhancing pattern discovery and reducing redundancy in data processing.
+The results obtained from the system demonstrate an overall accuracy of approximately 99%, indicating the effectiveness of the proposed approach. The system successfully classifies log messages into categories such as Security Alert, HTTP Status, Workflow Error, System Notification, and Deprecation Warning. The API-based implementation using FastAPI enables real-time log classification, making the system suitable for practical deployment in enterprise applications.
+Overall, the proposed hybrid log classification system provides a scalable, flexible, and efficient solution for automated log analysis. It reduces manual effort, improves anomaly detection, and enhances system monitoring capabilities. Future work can focus on integrating real-time streaming platforms, optimizing model performance, implementing automated retraining mechanisms, and enhancing visualization tools.  
+  
+REFERENCES 
+ 
+ 
+   1. Guo, H., Yuan, S., and Wu, X., "Logbert: Log anomaly detection via bert," in 2021 International Joint Conference on Neural Networks (IJCNN), 2021, pp. 1-8. 
+ 
+   2. He, P., Zhu, J., Zheng, Z., and Lyu, M. R., "Drain: An online log parsing approach with fixed depth tree," in 2017 IEEE International Conference on Web Services (ICWS), 2017, pp. 33-40. 
+ 
+   3. He, S., He, P., Chen, Z., Yang, T., Su, Y., and Lyu, M. R., "A survey on automated log analysis for reliability engineering," ACM Computing Surveys (CSUR), vol. 54, no. 6, 2021, pp. 1-37. 
+ 
+   4. Le, V.-H. and Zhang, H., "Log-based anomaly detection with deep learning: How far are we?" in Proceedings of the 44th International Conference on Software Engineering, 2022, pp. 1356-1367. 
+ 
+   5. Lin, Q., Zhang, H., Lou, J.-G., Zhang, Y., and Chen, X., "Log clustering based problem identification for online service systems," in Proceedings of the 38th International Conference on Software Engineering Companion, 2016, pp. 102-111. 
+ 
+   6. Meng, W., Liu, Y., Zhu, Y., Zhang, S., Pei, D., Liu, Y., Chen, Y., Zhang, R., Tao, S., and Sun, P., "Loganomaly: Unsupervised detection of sequential and quantitative anomalies in unstructured logs," in Proceedings of the International Joint Conference on Artificial Intelligence (IJCAI), 2019, pp. 4739-4745. 
+ 
+   7. Sui, Y., Zhang, Y., Sun, J., Xu, T., Zhang, S., Li, Z., Sun, Y., Guo, F., Shen, J., and Zhang, Y., "Logkg: Log failure diagnosis through knowledge graph," IEEE Transactions on Services Computing, 2023. 
+ 
+   8. Yang, L., Chen, J., Wang, Z., Wang, W., Jiang, J., Dong, X., and Zhang,
+ 
+   9. Zhang, L., Jia, T., Tan, X., Huang, X., Jia, M., Liu, H., Wu, Z., and Li, Y., "E-Log: Fine-grained Elastic Log-Based Anomaly Detection and Diagnosis for Databases," IEEE Transactions on Services Computing, 2025. 
+ 
+   10. Zhang, X., Xu, Y., Lin, Q., Qiao, B., Zhang, H., Dang, Y., Xie, C., Yang, X., Cheng, Q., and Li, Z., "Robust log-based anomaly detection on unstable log data," in Proceedings of the 2019 27th ACM Joint Meeting on European Software Engineering Conference and Symposium on the Foundations of Software Engineering, 2019, pp. 
+807-81. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ANNEXURE  
+ 
+ANNEXURE - 1: PLAGARISM REPORT 
+  
+
+
+
+
+
+ANNEXURE  2:  
+ 
+Conference Details: 15th International Conference on Recent Challenges in Engineering and Technology (ICRCET-2026) 
+  
+ 
+ 
+
+
+
+
+
+
+ 
+Payment Receipt: 
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ANNEXURE  3: SDG MAPPING 
+
+
+Project Title: Hybrid Log Classification System Using Bert, Dbscan , Regex and Llm 
+
+
+SDG TABLE: 
+SDG 
+GOAL 
+	DESCRIPTION 
+	JUSTIFICATION 
+	SDG 3 
+	Good health and well-being 
+	The proposed system indirectly contributes to system reliability in healthcare infrastructures by ensuring efficient log monitoring and anomaly detection. By identifying critical errors and system failures in real time, the system helps maintain uninterrupted healthcare services and improves the reliability of medical software systems.
+	SDG 9 
+	Industry, 
+Innovation and 
+Infrastructure 
+	The project leverages advanced technologies such as Machine Learning, Deep Learning, and Large Language Models to enhance log analysis systems. It supports innovation in IT infrastructure by enabling automated monitoring, reducing manual effort, and improving system efficiency in enterprise environments.
+	SDG 
+10 
+	Reduced 
+Inequalities 
+	The system can be deployed in various organizations regardless of size, enabling small and large enterprises to benefit from automated log analysis. This reduces technological gaps by providing scalable and accessible solutions for system monitoring and anomaly detection.
+	  
+
+
+
+
+
+
+ANNEXURE 4: PO - PSO MAPPING 
+
+
+Project Title: Hybrid Log Classification System Using Bert, Dbscan , Regex and Llm 
+
+
+PO Mapping Table: 
+Mapping Level (1-Low, 2-Medium, 3-High) 
+PO - PSO 
+	MAPPING 
+LEVEL 
+	JUSTIFICATION 
+	PO1 
+	3 
+	Application of machine learning, deep learning, and natural language processing techniques for log classification and anomaly detection.
+	PO2 
+	3 
+	Analysis of system logs to identify patterns, anomalies, and critical issues in enterprise systems.
+	PO3 
+	3 
+	Design and development of a hybrid log classification system integrating multiple technologies such as regex, embeddings, clustering, and LLM.
+	PO4 
+	2 
+	
+
+
+
+	
+
+Experimental validation using real-world log datasets and performance evaluation using metrics such as accuracy and F1-score.
+	
+
+	PO5 
+	3 
+	Use of modern tools and technologies such as Python, FastAPI, Sentence Transformers, Scikit-learn, and OpenAI APIs.
+	PO6 
+	3 
+	
+
+
+
+	
+
+Contribution to improving system reliability and monitoring in enterprise environments through automated log analysis.
+	
+
+	PO7 
+	3 
+	Supports efficient resource utilization and system maintenance in IT infrastructure.
+	PO8 
+	1 
+	Ethical considerations in handling sensitive log data and ensuring secure processing.
+	PO9 
+	2 
+	Team-based development and collaboration in building and testing the system.
+	PO10 
+	2 
+	Documentation and effective presentation of system design, implementation, and results.
+	PO11 
+	2 
+	Planning, development, and management of the project lifecycle.
+	PO12 
+	3 
+	Continuous learning and application of advanced AI techniques such as transformers and LLMs.
+	PSO1 
+	3 
+	
+
+
+
+	
+
+Application of AI, ML, and NLP techniques for solving real-world log analysis problems.
+	
+
+	PSO2 
+	3 
+	Development of an intelligent system for automated log classification and anomaly detection.
+	PSO3 
+	3 
+	Design and implementation of a scalable hybrid system combining multiple technologies.
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ANNEXURE 5 - SCREENSHOTS 
+
+
+ Output after classification :
+  
+
+ 
+Regex Patterns Found:  
+  
+
+  
+
+
+
+
+
+
+
+
+Prediction result & Accuracy:

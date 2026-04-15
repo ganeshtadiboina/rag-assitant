@@ -1,0 +1,5 @@
+﻿Artificial Intelligence (AI) is transforming industries.
+Machine learning allows systems to learn from data.
+Deep learning is a subset of machine learning that uses neural networks.
+Natural Language Processing helps computers understand human language.
+Computer vision enables machines to interpret images.

@@ -1,0 +1,29 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+
+# Environment variables
+.env
+
+# Node
+node_modules/
+dist/
+build/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Qdrant storage
+qdrant_storage/
+
+# IDEs
+.vscode/
+.idea/
