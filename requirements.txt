@@ -21,3 +21,7 @@ openai==1.37.1
 # Optional but commonly used with LangChain
 langchain==0.2.14
 langchain-community==0.2.12
+
+# Settings management
+pydantic>=2.0
+pydantic-settings>=2.0
