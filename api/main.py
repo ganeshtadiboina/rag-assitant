@@ -7,6 +7,7 @@ app = FastAPI(title="Production RAG API")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        "*",
         "http://localhost:5174",
         "http://127.0.0.1:8001",
     ],

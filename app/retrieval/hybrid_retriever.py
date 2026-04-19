@@ -2,43 +2,45 @@ from typing import List, Dict
 
 
 class HybridRetriever:
-    """
-    Combines BM25 and vector search results.
-    """
-
-    def __init__(self, bm25_retriever, vectorstore, bm25_weight: float = 0.5):
+    def __init__(self, bm25_retriever, vectorstore):
         self.bm25_retriever = bm25_retriever
         self.vectorstore = vectorstore
-        self.bm25_weight = bm25_weight
 
     def search(self, query: str, thread_id: str, top_k: int = 5) -> List[Dict]:
-        # Vector search results
+
+        # 🔹 Vector search (already correct format)
         vector_results = self.vectorstore.similarity_search(
             query=query,
             thread_id=thread_id,
             k=top_k
         )
 
-        # BM25 results (text only)
-        bm25_texts = []
+        # BM25 returns same shape as vector hits: page_content, metadata, score
+        bm25_results = []
         if self.bm25_retriever:
-            bm25_texts = self.bm25_retriever.search(query, top_k=top_k)
+            bm25_results = self.bm25_retriever.search(
+                query=query,
+                thread_id=thread_id,
+                top_k=top_k,
+            )
 
-        # Convert BM25 results to document format
-        bm25_results = [
-            {
-                "page_content": text,
-                "metadata": {"source": "bm25"}
-            }
-            for text in bm25_texts
-        ]
+        # 🔹 Merge + deduplicate
+        merged = {}
 
-        # Combine and deduplicate results
-        combined = vector_results + bm25_results
-        unique_docs = {}
-        for doc in combined:
-            content = doc["page_content"]
-            if content not in unique_docs:
-                unique_docs[content] = doc
+        for doc in vector_results + bm25_results:
+            key = doc["page_content"]
 
-        return list(unique_docs.values())[:top_k]
+            if key not in merged:
+                merged[key] = doc
+            else:
+                if doc.get("score", 0) > merged[key].get("score", 0):
+                    merged[key] = doc
+
+        # 🔹 Sort by score
+        sorted_docs = sorted(
+            merged.values(),
+            key=lambda x: x.get("score", 0),
+            reverse=True
+        )
+
+        return sorted_docs[:top_k]

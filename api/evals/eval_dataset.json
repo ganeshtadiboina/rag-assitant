@@ -1,0 +1,12 @@
+[
+    {
+      "question": "What are non functional requirements?",
+      "expected_answer": "Non functional requirements define performance, scalability and reliability.",
+      "thread_id": "thread_ai"
+    },
+    {
+      "question": "What is system architecture?",
+      "expected_answer": "System architecture defines structure and components of a system.",
+      "thread_id": "thread_ai"
+    }
+  ]

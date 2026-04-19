@@ -1,4 +1,3 @@
-// src/components/FileUpload.jsx
 import { useState } from "react";
 import axios from "axios";
 import {
@@ -6,7 +5,7 @@ import {
   Button,
   Typography,
   LinearProgress,
-  TextField,
+  Paper,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
@@ -23,15 +22,21 @@ export default function FileUpload() {
     }
 
     const formData = new FormData();
+    const threadId = crypto.randomUUID();
+
     formData.append("file", file);
     formData.append("user_id", "user_1");
-    formData.append("thread_id", "thread_ai");
+    formData.append("thread_id", threadId);
+
+    // ✅ Store thread_id for querying
+    localStorage.setItem("thread_id", threadId);
 
     setLoading(true);
     try {
       await axios.post(`${API_URL}/upload`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+
       alert("Document uploaded successfully!");
       setFile(null);
     } catch (error) {
@@ -43,17 +48,15 @@ export default function FileUpload() {
   };
 
   return (
-    <Box textAlign="center">
+    <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
       <Typography variant="h5" gutterBottom>
         Upload Document
       </Typography>
 
-      <TextField
+      <input
         type="file"
-        fullWidth
         onChange={(e) => setFile(e.target.files[0])}
-        sx={{ my: 2 }}
-        InputLabelProps={{ shrink: true }}
+        style={{ margin: "1rem 0" }}
       />
 
       {loading && <LinearProgress sx={{ mb: 2 }} />}
@@ -66,6 +69,11 @@ export default function FileUpload() {
       >
         {loading ? "Uploading..." : "Upload"}
       </Button>
-    </Box>
+
+      {/* ✅ Show active thread */}
+      <Typography variant="caption" display="block" sx={{ mt: 2 }}>
+        Active Thread: {localStorage.getItem("thread_id") || "None"}
+      </Typography>
+    </Paper>
   );
 }

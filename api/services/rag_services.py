@@ -20,6 +20,19 @@ class RAGService:
         self.bm25 = None
         self.hybrid = None
 
+    def _ensure_hybrid_from_vectorstore(self) -> bool:
+        """Restore BM25 + hybrid from Qdrant after process restart (or cold start)."""
+        if self.hybrid is not None:
+            return True
+        chunks = self.vectorstore.fetch_chunks_for_bm25()
+        if not chunks:
+            return False
+        self.bm25_corpus = chunks
+        self.bm25 = BM25Retriever(self.bm25_corpus)
+        self.hybrid = HybridRetriever(self.bm25, self.vectorstore)
+        logger.info("Rebuilt hybrid retriever from Qdrant (%s chunks).", len(chunks))
+        return True
+
     def ingest_document(self, file_path, user_id, thread_id, document_id, source):
         docs = load_documents(file_path)
         chunks = split_documents(docs)
@@ -44,24 +57,27 @@ class RAGService:
         # Store in Qdrant
         self.vectorstore.add_documents(texts, metadata_list)
 
-        # Update BM25 corpus
-        self.bm25_corpus.extend(texts)
-        self.bm25 = BM25Retriever(self.bm25_corpus)
+        # BM25 corpus: BM25Retriever expects {"text", "metadata"} per chunk
+        bm25_docs = [
+            {"text": text, "metadata": meta}
+            for text, meta in zip(texts, metadata_list)
+        ]
+        self.bm25_corpus.extend(bm25_docs)
 
-        # Initialize Hybrid Retriever
+        self.bm25 = BM25Retriever(self.bm25_corpus)
         self.hybrid = HybridRetriever(self.bm25, self.vectorstore)
 
         logger.info(f"Document {document_id} ingested successfully.")
 
-    def query(self, user_query: str, thread_id: str) -> str:
+    def query(self, user_query: str, thread_id: str):
         logger.info(f"Received query: {user_query}")
 
-        # Ensure hybrid retriever is initialized
-        if not self.hybrid:
-            logger.warning("Hybrid retriever not initialized.")
-            return "No documents available. Please upload documents first."
+        if not self._ensure_hybrid_from_vectorstore():
+            return {
+                "answer": "No documents available. Please upload first.",
+                "sources": []
+            }
 
-        # Hybrid retrieval
         retrieved_docs = self.hybrid.search(
             query=user_query,
             thread_id=thread_id,
@@ -69,15 +85,15 @@ class RAGService:
         )
 
         if not retrieved_docs:
-            return "I don't know."
+            return {
+                "answer": "I don't know.",
+                "sources": []
+            }
 
-        # Extract text
-        texts = [doc["page_content"] for doc in retrieved_docs]
+        # ✅ Pass FULL docs to reranker
+        reranked_docs = self.reranker.rerank(user_query, retrieved_docs)
 
-        # Rerank
-        reranked_docs = self.reranker.rerank(user_query, texts)
+        # ✅ Generator returns structured output
+        result = self.generator.generate(user_query, reranked_docs)
 
-        # Generate answer with citations
-        answer = self.generator.generate(user_query, reranked_docs)
-
-        return answer
+        return result

@@ -1,7 +1,10 @@
-// src/main.jsx
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
+import {
+  ThemeProvider,
+  createTheme,
+  CssBaseline,
+} from "@mui/material";
 import App from "./App.jsx";
 
 const theme = createTheme({
@@ -19,10 +22,10 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: "Roboto, sans-serif",
+    fontFamily: "Inter, Roboto, sans-serif",
   },
   shape: {
-    borderRadius: 12,
+    borderRadius: 14,
   },
 });
 

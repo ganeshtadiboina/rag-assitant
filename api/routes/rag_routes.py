@@ -48,11 +48,11 @@ async def upload_documents(
 @router.post("/query", response_model=QueryResponse)
 def query_rag(request: QueryRequest):
     try:
-        answer = rag_service.query(
+        result = rag_service.query(
             user_query=request.query,
             thread_id=request.thread_id,
         )
-        return QueryResponse(answer=answer)
+        return QueryResponse(**result)
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

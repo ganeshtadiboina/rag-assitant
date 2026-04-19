@@ -1,4 +1,3 @@
-// src/components/QueryBox.jsx
 import { useState } from "react";
 import axios from "axios";
 import {
@@ -7,6 +6,7 @@ import {
   Typography,
   TextField,
   CircularProgress,
+  Paper,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
@@ -22,23 +22,35 @@ export default function QueryBox({ setAnswer }) {
       return;
     }
 
+    const threadId = localStorage.getItem("thread_id");
+
+    // ❗ Critical check
+    if (!threadId) {
+      alert("Please upload a document first.");
+      return;
+    }
+
     setLoading(true);
     try {
       const res = await axios.post(`${API_URL}/query`, {
         query,
-        thread_id: "thread_ai",
+        thread_id: threadId,
       });
-      setAnswer(res.data.answer);
+
+      setAnswer(res.data);
     } catch (error) {
       console.error("Query error:", error);
-      alert("Query failed. Please ensure the backend server is running.");
+      alert(
+        error?.response?.data?.detail ||
+          "Query failed. Ensure backend is running."
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Box textAlign="center">
+    <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
       <Typography variant="h5" gutterBottom>
         Ask a Question
       </Typography>
@@ -60,6 +72,11 @@ export default function QueryBox({ setAnswer }) {
       >
         {loading ? <CircularProgress size={24} /> : "Ask"}
       </Button>
-    </Box>
+
+      {/* ✅ Show thread context */}
+      <Typography variant="caption" display="block" sx={{ mt: 2 }}>
+        Querying Thread: {localStorage.getItem("thread_id") || "None"}
+      </Typography>
+    </Paper>
   );
 }
