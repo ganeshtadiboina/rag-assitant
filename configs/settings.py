@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic_settings import BaseSettings
 
 
@@ -15,6 +17,8 @@ class Settings(BaseSettings):
     BM25_WEIGHT: float = 0.5
 
     # 📦 Qdrant Config
+    QDRANT_URL: Optional[str] = None
+    QDRANT_API_KEY: Optional[str] = None
     QDRANT_HOST: str = "localhost"
     QDRANT_PORT: int = 6333
     COLLECTION_NAME: str = "rag_documents"

@@ -11,18 +11,28 @@ from sentence_transformers import SentenceTransformer
 from uuid import uuid4
 import logging
 from typing import List, Dict, Optional
+from configs.settings import settings
 
 logger = logging.getLogger(__name__)
 
 
 class QdrantVectorStore:
-    def __init__(self, collection_name: str = "rag_documents"):
-        self.client = QdrantClient(host="localhost", port=6333)
-        self.collection_name = collection_name
+    def __init__(self, collection_name: Optional[str] = None):
+        if settings.QDRANT_URL:
+            self.client = QdrantClient(
+                url=settings.QDRANT_URL,
+                api_key=settings.QDRANT_API_KEY,
+            )
+        else:
+            self.client = QdrantClient(
+                host=settings.QDRANT_HOST,
+                port=settings.QDRANT_PORT,
+            )
+        self.collection_name = collection_name or settings.COLLECTION_NAME
 
         # Embedding model
         self.embedding_model = SentenceTransformer(
-            "sentence-transformers/all-MiniLM-L6-v2"
+            settings.EMBEDDING_MODEL
         )
         self.embedding_dim = (
             self.embedding_model.get_sentence_embedding_dimension()
