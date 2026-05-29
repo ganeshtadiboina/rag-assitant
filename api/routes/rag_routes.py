@@ -7,10 +7,17 @@ from api.schemas.response_models import QueryResponse
 from api.services.rag_services import RAGService
 
 router = APIRouter()
-rag_service = RAGService()
+rag_service = None
 
 UPLOAD_DIR = "data/uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+
+def get_rag_service() -> RAGService:
+    global rag_service
+    if rag_service is None:
+        rag_service = RAGService()
+    return rag_service
 
 
 @router.post("/upload")
@@ -28,7 +35,7 @@ async def upload_documents(
             f.write(await file.read())
 
         # Process document
-        rag_service.ingest_document(
+        get_rag_service().ingest_document(
             file_path=file_path,
             user_id=user_id,
             thread_id=thread_id,
@@ -48,7 +55,7 @@ async def upload_documents(
 @router.post("/query", response_model=QueryResponse)
 def query_rag(request: QueryRequest):
     try:
-        result = rag_service.query(
+        result = get_rag_service().query(
             user_query=request.query,
             thread_id=request.thread_id,
         )
