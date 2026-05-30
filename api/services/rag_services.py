@@ -7,6 +7,7 @@ from app.reranker.cross_encoder import CrossEncoderReranker
 from app.generation.generator import RAGGenerator
 from datetime import datetime
 import logging
+from configs.settings import settings
 
 logger = logging.getLogger(__name__)
 
@@ -14,11 +15,21 @@ logger = logging.getLogger(__name__)
 class RAGService:
     def __init__(self):
         self.vectorstore = QdrantVectorStore()
-        self.reranker = CrossEncoderReranker()
-        self.generator = RAGGenerator()
+        self.reranker = None
+        self.generator = None
         self.bm25_corpus = []
         self.bm25 = None
         self.hybrid = None
+
+    def _get_reranker(self) -> CrossEncoderReranker:
+        if self.reranker is None:
+            self.reranker = CrossEncoderReranker(settings.RERANKER_MODEL)
+        return self.reranker
+
+    def _get_generator(self) -> RAGGenerator:
+        if self.generator is None:
+            self.generator = RAGGenerator()
+        return self.generator
 
     def _ensure_hybrid_from_vectorstore(self) -> bool:
         """Restore BM25 + hybrid from Qdrant after process restart (or cold start)."""
@@ -91,9 +102,9 @@ class RAGService:
             }
 
         # ✅ Pass FULL docs to reranker
-        reranked_docs = self.reranker.rerank(user_query, retrieved_docs)
+        reranked_docs = self._get_reranker().rerank(user_query, retrieved_docs)
 
         # ✅ Generator returns structured output
-        result = self.generator.generate(user_query, reranked_docs)
+        result = self._get_generator().generate(user_query, reranked_docs)
 
         return result

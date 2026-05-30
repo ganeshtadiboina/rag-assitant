@@ -41,7 +41,7 @@ export default function FileUpload() {
       setFile(null);
     } catch (error) {
       console.error("Upload error:", error);
-      alert("Upload failed");
+      alert(error?.response?.data?.detail || "Upload failed");
     } finally {
       setLoading(false);
     }

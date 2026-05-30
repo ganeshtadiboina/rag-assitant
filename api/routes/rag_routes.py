@@ -1,5 +1,6 @@
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException
-import os
+import logging
+from pathlib import Path
 from uuid import uuid4
 
 from api.schemas.request_models import QueryRequest
@@ -8,9 +9,10 @@ from api.services.rag_services import RAGService
 
 router = APIRouter()
 rag_service = None
+logger = logging.getLogger(__name__)
 
-UPLOAD_DIR = "data/uploads"
-os.makedirs(UPLOAD_DIR, exist_ok=True)
+UPLOAD_DIR = Path("data/uploads")
+SUPPORTED_EXTENSIONS = {".pdf", ".txt"}
 
 
 def get_rag_service() -> RAGService:
@@ -27,8 +29,17 @@ async def upload_documents(
     thread_id: str = Form(...),
 ):
     try:
+        original_filename = Path(file.filename or "upload").name
+        file_extension = Path(original_filename).suffix.lower()
+        if file_extension not in SUPPORTED_EXTENSIONS:
+            raise HTTPException(
+                status_code=400,
+                detail="Unsupported file format. Please upload a PDF or TXT file.",
+            )
+
+        UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
         document_id = str(uuid4())
-        file_path = os.path.join(UPLOAD_DIR, file.filename)
+        file_path = UPLOAD_DIR / f"{document_id}{file_extension}"
 
         # Save file
         with open(file_path, "wb") as f:
@@ -36,11 +47,11 @@ async def upload_documents(
 
         # Process document
         get_rag_service().ingest_document(
-            file_path=file_path,
+            file_path=str(file_path),
             user_id=user_id,
             thread_id=thread_id,
             document_id=document_id,
-            source=file.filename,
+            source=original_filename,
         )
 
         return {
@@ -48,7 +59,10 @@ async def upload_documents(
             "document_id": document_id,
         }
 
+    except HTTPException:
+        raise
     except Exception as e:
+        logger.exception("Document upload failed")
         raise HTTPException(status_code=500, detail=str(e))
 
 
