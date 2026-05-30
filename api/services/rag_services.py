@@ -101,8 +101,11 @@ class RAGService:
                 "sources": []
             }
 
-        # ✅ Pass FULL docs to reranker
-        reranked_docs = self._get_reranker().rerank(user_query, retrieved_docs)
+        if settings.ENABLE_RERANKER:
+            # ✅ Pass FULL docs to reranker
+            reranked_docs = self._get_reranker().rerank(user_query, retrieved_docs)
+        else:
+            reranked_docs = retrieved_docs
 
         # ✅ Generator returns structured output
         result = self._get_generator().generate(user_query, reranked_docs)

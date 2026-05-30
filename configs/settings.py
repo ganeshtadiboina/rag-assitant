@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     LLM_MODEL: str = "gpt-4o-mini"
     EMBEDDING_MODEL: str = "sentence-transformers/all-MiniLM-L6-v2"
     RERANKER_MODEL: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"
+    ENABLE_RERANKER: bool = False
 
     # 📊 Retrieval Config
     TOP_K: int = 5

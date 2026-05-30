@@ -40,9 +40,15 @@ export default function QueryBox({ setAnswer }) {
       setAnswer(res.data);
     } catch (error) {
       console.error("Query error:", error);
-      alert(
+      const message =
         error?.response?.data?.detail ||
-          "Query failed. Ensure backend is running."
+        error?.response?.statusText ||
+        error?.message ||
+        "Query failed. Ensure backend is running.";
+      alert(
+        error?.response?.status
+          ? `Query failed: ${error.response.status} ${message}`
+          : message
       );
     } finally {
       setLoading(false);
