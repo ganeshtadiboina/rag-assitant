@@ -6,6 +6,7 @@ from qdrant_client.http.models import (
     FieldCondition,
     MatchValue,
     PointStruct,
+    PayloadSchemaType,
 )
 from sentence_transformers import SentenceTransformer
 from uuid import uuid4
@@ -53,6 +54,26 @@ class QdrantVectorStore:
                 ),
             )
             logger.info(f"Created collection: {self.collection_name}")
+        self._ensure_payload_indexes()
+
+    def _ensure_payload_indexes(self):
+        collection_info = self.client.get_collection(self.collection_name)
+        payload_schema = getattr(collection_info, "payload_schema", {}) or {}
+
+        for field_name in ("thread_id", "user_id"):
+            if field_name in payload_schema:
+                continue
+
+            self.client.create_payload_index(
+                collection_name=self.collection_name,
+                field_name=field_name,
+                field_schema=PayloadSchemaType.KEYWORD,
+                wait=True,
+            )
+            logger.info(
+                "Created Qdrant payload index for field: %s",
+                field_name,
+            )
 
     def add_documents(
         self, texts: List[str], metadata_list: List[Dict]
